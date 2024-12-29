@@ -2,4 +2,35 @@ This package contains a whole set of classes and sub packages, which will serve 
 
 We want to test every possible combination of relations of package diagrams and class diagrams.
 
-Each class will be documented, to inform the reader about its characteristics; from fields to what it extends and/or implements.
+Each class will be documented, to inform the reader about its characteristics; from fields to what it extends and/or implements, etc.
+
+
+
+The following is a description of the relations we can find in a package diagram or a class diagram.
+
+- Relations in a package diagram :
+	+ import : we use this relation if a class from package A imports a class from package B.
+	
+	+ access : we use this relation if a class from package A uses a class from package B (for example inheritance, or implementation).
+	
+	+ merge : we can use this relation to inform that a package is made of multiple packages (integration of multiple functionalities for example). We can avoid using this relation by drawing the sub packages inside the main package; it provides almost the same meaning.
+	
+	
+- Relations in a class diagram :
+	+ generalization : depicts inheritance.
+	
+	+ aggregation : depicts the fact that a class is made of other classes, so in other words, used when a class has other classes as attributes and we want to link between the class and these classes.
+	
+	+ composition : depicts the same thing as aggregation, + the following : the classes attributes are in fact inner classes; declared inside that class, thus if the class representing the whole is removed, the inner classes will be removed too.
+	
+	+ association class : used when 2 classes share some attributes and methods, so instead of rewriting them, we use this relation.
+	
+	+ realization : depicts implementation of an interface.
+	
+	+ dependency : depicts a dependency between 2 classes (such as when a class A uses a method of class B).
+	
+	+ association : used when none of the above can be used, and represents simply some kind of relation (often semantic) between 2 or more classes. 
+	
+	
+	
+	
