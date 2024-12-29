@@ -1,0 +1,5 @@
+This package contains a whole set of classes and sub packages, which will serve as a sample data to test if the diagrams created by our project will actually be accurate and correct.
+
+We want to test every possible combination of relations of package diagrams and class diagrams.
+
+Each class will be documented, to inform the reader about its characteristics; from fields to what it extends and/or implements.
