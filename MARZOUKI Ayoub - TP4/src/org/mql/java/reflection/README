@@ -1,0 +1,22 @@
+This file will be discussing the approach to accomplishing our task in the following :
+
+We first retrieve all the names of every file, every folder and every file in every folder.
+
+We then store them in a collection whose structure is the following :
+- An outer array list, whose goal is to provide the layers (explained below).
+	- Each element of this array list is also an inner array list.
+		- Each element of each inner array list will be a hash map.
+			- Each hash map will contain the folder's name, and all the files' names' it contains.
+			
+
++ the layer of each folder means the level of nesting of the folder (src folder is the very first layer, layer 0).
+
+These layers will later help us identify where to draw packages (specifically when a package contains multiple sub packages).
+
+As for reflection, we have a MAJOR condition to look out for :
+
+One of the ways to get the Class Object representing a given class is to use "forName()" method, whose parameter is the class's full qualified name (example : org.mql.java.drawing.Frame) if we suppose that this class isn't in the same package as the class trying to apply reflection on it.
+
+The major condition is that this class has to be compiled, in other words its according .class file must exist, otherwise it'll always result in a "java.lang.ClassNotFoundException" exception, and we will never be able to apply reflection.
+
+Thus, we're going to assume that the given project's classes have at least been compiled once.
