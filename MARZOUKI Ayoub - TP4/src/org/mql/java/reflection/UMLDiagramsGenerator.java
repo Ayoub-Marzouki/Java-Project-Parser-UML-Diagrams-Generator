@@ -3,75 +3,61 @@ package org.mql.java.reflection;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
+import org.mql.java.drawing.ClassDiagram;
+import org.mql.java.drawing.Frame;
+import org.mql.java.drawing.PackageDiagram;
+
 public class UMLDiagramsGenerator {
-//	These will store all files and folders so that we can apply reflection on them later
-	private static Structure structure = new Structure();
+	private static List<String> fullyQualifiedClassNames = new ArrayList<>();
+    private static List<String> packageHierarchy = new ArrayList<>();
+    private static List<String> packagesNames = new ArrayList<>();
 	
-	private static Vector<String> foldersNames = new Vector<String>();
+	public UMLDiagramsGenerator() {}
 	
-	
-	public static void generate(Path srcFolderPath) {
-		File srcFolder = srcFolderPath.toFile();
-		File[] srcFolderFiles = srcFolder.listFiles();
-		retrieveAllFilesNames(srcFolderFiles);		
-	}
-	
-	private static int layerIndex = 0;
-	private static StringBuilder fullQualifiedName;
-	private static String currentFolderName;
-	private static Vector<String> filesNames = new Vector<String>();
-	
-	static Vector<String> currentFilesNames = new Vector<String>();
-	
-//		This will store every file, every folder and every file in every folder
-	public static void retrieveAllFilesNames(File[] srcFolderFiles) {
-		for (File f : srcFolderFiles) {
-			if (f.getName().endsWith(".java")) {
-				System.out.println(f.getName() +"\n");
-				filesNames.add(f.getName());
-				currentFilesNames.add(f.getName());
-			} 
-			else if (f.isDirectory() && !f.getName().startsWith(".")) {
-				foldersNames.add(f.getName());
+	public static void generateDiagrams() throws ClassNotFoundException {
+		Frame frame = new Frame();
+		
+		for (int i = 0; i< packagesNames.size(); i++) {
+			PackageDiagram p = new PackageDiagram(packagesNames.get(i));
+			
+			for (int j = 0; j < fullyQualifiedClassNames.size(); j++) {
+				ClassDiagram c = new ClassDiagram(fullyQualifiedClassNames.get(j));
 				
-				currentFolderName = f.getName();
-				structure.addLayer();
-				
-				System.out.println("Layer " + layerIndex);
-				System.out.println(f.getName() + "\n");
-				
-				structure.addFolderWithFilesToLayer(currentFolderName, new Vector<>(currentFilesNames), layerIndex);				
-
-//				Clear current files to prepare for the next folder
-				currentFilesNames.clear();
-				
-				if (f.listFiles() != null) {
-					layerIndex++; // Go 1 level deeper into folder hiearchy
-					retrieveAllFilesNames(f.listFiles());
-					layerIndex--; // Go back when done processing that sub folder
-				}
-				structure.hierarchy.add(new ArrayList<>(structure.hierarchyElement));
-	            structure.hierarchyElement.remove(currentFolderName);
-			}  
+				Class<?> cls = Class.forName(fullyQualifiedClassNames.get(j));
+				if (cls.getPackageName().equals(packagesNames.get(i))) p.addToPackageDiagram(c);
+			}
+			
+			frame.addToContentPanel(p);
 		}
 	}
-	
-	public static void structure() {
-		// Iterate through each layer in the hierarchy
-		for (ArrayList<String> layer : structure.hierarchy) {
-		    System.out.println("Layer:");
-		    
-		    // Iterate through each folder name in the current layer
-		    for (String folderName : layer) {
-		        System.out.println(" - " + folderName); // Print folder name with indentation
-		    }
-		    
-		    System.out.println(); // Add an empty line for better readability between layers
-		}
 
-		structure.printStructure();
+	public static List<String> getFullyQualifiedClassNames() {
+		return fullyQualifiedClassNames;
 	}
+
+	public static void setFullyQualifiedClassNames(List<String> fullyQualifiedClassNames) {
+		UMLDiagramsGenerator.fullyQualifiedClassNames = fullyQualifiedClassNames;
+	}
+
+	public static List<String> getPackageHierarchy() {
+		return packageHierarchy;
+	}
+
+	public static void setPackageHierarchy(List<String> packageHierarchy) {
+		UMLDiagramsGenerator.packageHierarchy = packageHierarchy;
+	}
+
+	public static List<String> getPackagesNames() {
+		return packagesNames;
+	}
+
+	public static void setPackagesNames(List<String> packagesNames) {
+		UMLDiagramsGenerator.packagesNames = packagesNames;
+	}
+	
+	
 	
 }
