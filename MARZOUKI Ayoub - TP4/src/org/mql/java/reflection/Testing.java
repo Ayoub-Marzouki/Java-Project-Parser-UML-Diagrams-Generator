@@ -1,6 +1,11 @@
 package org.mql.java.reflection;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+
+import org.mql.java.drawing.relations.pack.Merge;
 
 public class Testing {
 	public static void main(String[] args) throws ClassNotFoundException {
@@ -10,15 +15,8 @@ public class Testing {
 //        String path = scanner.nextLine();
         String path = "C:\\Users\\ayoub\\git\\repository\\MARZOUKI Ayoub - TP4\\src";
 //        scanner.close();
-//        
-        ProjectProcessor.process(path);
-//        
-//        String s = ProjectProcessor.getFullyQualifiedClassNames().get(0);
-//        
-//        Class<?> c = Class.forName(s);
-//        System.out.println("\n\n\n\n testing : " + s + "\ngetPackage : " + c.getPackage() + "\nPackage name : " + c.getPackageName());
         
+        ProjectProcessor.process(path); 
         UMLDiagramsGenerator.generateDiagrams();
-        
 	}
 }

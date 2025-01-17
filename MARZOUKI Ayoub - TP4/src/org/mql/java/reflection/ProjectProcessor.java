@@ -3,12 +3,14 @@ package org.mql.java.reflection;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProjectProcessor {
     private static List<String> fullyQualifiedClassNames = new ArrayList<>();
     private static List<String> packageHierarchy = new ArrayList<>();
     private static List<String> packagesNames = new ArrayList<>();
+    private static HashMap<String, String> mergeRelations = new HashMap<>();
 
     public static void process(String srcFolderPath) {
     	Path pathToSrcFolder = Path.of(srcFolderPath);
@@ -31,7 +33,7 @@ public class ProjectProcessor {
         }
         
         prepareToDraw();
-        printResults();
+//        printResults();
     }
 
     private static boolean isValidSrcFolder(File srcFolder) {
@@ -87,6 +89,30 @@ public class ProjectProcessor {
         for (String packageName : packagesNames) {
         	System.out.println(packageName);
         }
+    }
+    
+    
+    public static void processRelations() {
+    	processMergeRelations();
+    }
+    
+    
+    public static void processMergeRelations() {
+    	for (String child : packageHierarchy) {
+    	    String immediateParent = null; // will hold the closest ancestor of the current child (org and org.mql are both ancestors of org.mql.java, but org.mql is closer)
+    	    for (String potentialParent : packageHierarchy) {
+    	        if (child.startsWith(potentialParent) && !child.equals(potentialParent)) {
+    	            // Check if it's a direct parent (longest matching prefix) : org, org.mql and org.mql.java are all parents of org.mql.java.drawing, but only org.mql.java is the immediate direct parent
+    	            if (immediateParent == null || potentialParent.length() > immediateParent.length()) {
+    	                immediateParent = potentialParent;
+    	            }
+    	        }
+    	    }
+    	    if (immediateParent != null) {
+    	        mergeRelations.put(child, immediateParent);
+    	    }
+    	}
+
     }
 
 	public static List<String> getFullyQualifiedClassNames() {
