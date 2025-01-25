@@ -16,7 +16,7 @@ import org.mql.java.drawing.relations.pack.Merge;
 import org.mql.java.reflection.ProjectProcessor;
 import org.mql.java.reflection.UMLDiagramsGenerator;
 
-public class Main {
+public class SwingMain {
 	public static void main(String[] args) throws ClassNotFoundException {
         Frame frame = new Frame();
         
