@@ -1,0 +1,22 @@
+What follows is a detailed description of the frame.
+
+The frame itself uses BorderLayout, where :
+	+ NORTH part is left for User Prompt (where user can enter the directory of his java project's source folder). 
+	
+	+ CENTER part is left for UML Diagrams. This one is made of layers, and thus uses JLayeredPane, called ContentPanel. The layers are :
+ 		* Layer 1 : diagramsLayer, contains all the package & class diagrams, already drawn.
+ 			- Package diagrams : use FlowLayout in order to control the exact position of class diagrams inside them.
+				With a vgap of 200, and hgap of 13 (specifically 13 to push the class diagram to be right next to the package's left border, and that is due to the default spacing of layouts (I wager)).
+			-  Class diagrams : are drawn in a very specific way ( in preparation for the next layer); the final representation will look like this :
+
+a      a      a
+   a      a      a
+     a      a      a
+etc.
+The point being : each class will never vertically collide with another class. That vertical space will be reserved for drawing class relations.
+
+			Explanation : The initial horizontal gap between the very first package containing at least 1 class and the very first class of that package is 13. Then, whenever we encounter a package that also has classes, the horizontal gap between the current package and its first class increases by the width of class diagram multiplied by the number of packages having at least 1 class. The horizontal space between classes will be constant : width of class diagram multiplied by the total amount of packages containing at least 1 class.
+			Thus, achieving such representation is doable by :
+				-- calculating the maximum number of classes in a single package.
+				-- keeping track of the number of packages containing classes.
+		* Layer 2 : relationsLayer, contains all the relations between packages and classes. It is added only after layer 1 is ready, since it does depend on the last state of diagrams' variables.

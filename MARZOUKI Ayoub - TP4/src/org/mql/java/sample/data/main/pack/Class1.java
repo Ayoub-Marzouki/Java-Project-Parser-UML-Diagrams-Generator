@@ -9,7 +9,7 @@ package org.mql.java.sample.data.main.pack;
 
 import org.mql.java.sample.data.main.pack.subpackage1.Sub1Class2;
 
-public class Class1 extends Class2 {
+public class Class1 extends Class2  {
 	private int attribute1;
 	static String attribute2;
 	public float attribute3;

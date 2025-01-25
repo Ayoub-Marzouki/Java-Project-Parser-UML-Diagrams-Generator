@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -23,25 +24,31 @@ public class PackageDiagram extends JPanel {
 	private String packageName;
 	
     private int numberOfPackageDiagrams = UMLDiagramsGenerator.getPackagesNames().size();
+//  max horizontal space between the very first class of a package and the package
 	private int maxLeftMargin = 200 * numberOfPackageDiagrams; 
+//	max Number of Class Diagrams in a single package
+	private int maxNumberOfClassDiagrams = UMLDiagramsGenerator.calculateNumberOfClassDiagrams();
 	
-//	This variable will hold the highest number of classes of the package with most classes
-	private int numberOfClassDiagrams = UMLDiagramsGenerator.calculateNumberOfClassDiagrams();
-	private int[] nameRectCoordinates = new int[] {0, 10, 400, 50};
-	private int[] packageRectCoordinates = new int[] {0, 60, numberOfClassDiagrams * ClassDiagram.getClassDiagramWidth() + maxLeftMargin, ClassDiagram.getClassDiagramHeight() + 200}; // 200 being the vGap of flowLayout
-	private int packageDiagramWidth = nameRectCoordinates[2] + packageRectCoordinates[2];
-	private int packageDiagramHeight = nameRectCoordinates[3] + packageRectCoordinates[3] + 60;
+	
+	private int[] nameRectCoordinates = new int[] {5, 5, 400, 50};
+//	Not sure if package diagram width's formula is 100% correct. to check later
+//	PackageRect's y = nameRect's y + nameRect's height
+	private int[] packageRectCoordinates = new int[] {nameRectCoordinates[0], nameRectCoordinates[1] + nameRectCoordinates[3], maxLeftMargin + 200 * numberOfPackageDiagrams * maxNumberOfClassDiagrams, ClassDiagram.getClassDiagramHeight() + 200}; // 200 being the vGap of flowLayout
+//	Don't know why we added namerect[2], but deleting it causes problems
+	private int packageDiagramWidth = packageRectCoordinates[2] + nameRectCoordinates[2];
+//	height = sum(height) of all elements (composing the package diagram) + some space (we need to take into account the stroke's width), same goes for width
+	private int packageDiagramHeight = nameRectCoordinates[3] + packageRectCoordinates[3] + 10;
 	
 	private Graphics2D g2d;
 	
-	public static int counter = 1;
+	public static int counter = 0;
+	
+	// This will be used to track the position of a certain class (first usage : generalization relations)
+	private int leftMargin;
 	
 	public PackageDiagram(String packageName) {
 		this.packageName = packageName;
-		System.out.println(counter);
-//		counter++;
 		
-//		height = sum(height) of all elements (composing the package diagram) + some space (we need to take into account the stroke's width), same goes for width
 		this.setPreferredSize(new Dimension(packageDiagramWidth, packageDiagramHeight));
 		
 		
@@ -51,6 +58,7 @@ public class PackageDiagram extends JPanel {
  *		
  */
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 13, 200));
+		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -58,14 +66,16 @@ public class PackageDiagram extends JPanel {
 		this.g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(3));
 		
-		Frame.drawCenteredText(g2d, packageName, nameRectCoordinates[0], nameRectCoordinates[1], nameRectCoordinates[2], nameRectCoordinates[3]);
+		Utilities.drawCenteredText(g2d, packageName, nameRectCoordinates[0], nameRectCoordinates[1], nameRectCoordinates[2], nameRectCoordinates[3]);
 
 		
-		g2d.drawRect(10, 10, nameRectCoordinates[2], nameRectCoordinates[3]);
-		g2d.drawRect(10, 60, packageRectCoordinates[2], packageRectCoordinates[3]);
+		g2d.drawRect(nameRectCoordinates[0], nameRectCoordinates[1], nameRectCoordinates[2], nameRectCoordinates[3]);
+		g2d.drawRect(packageRectCoordinates[0], packageRectCoordinates[1], packageRectCoordinates[2], packageRectCoordinates[3]);
 	}
 	
 	private boolean firstClassAdded = true;
+	// This map will be used for generalization relations
+	private HashMap<ClassDiagram, PackageDiagram> classParents = new HashMap<>();
 	public void addToPackageDiagram(JComponent c) {
 		/*
 		 * This JPanel is mandatory, and without it the empty border added to these classes will never be taken into account : 
@@ -74,11 +84,12 @@ public class PackageDiagram extends JPanel {
 		 */
 	    JPanel panel = new JPanel();
 	    if (firstClassAdded) {
-	    	int leftMargin = 200 * (counter - 1);
+	    	int leftMargin = 500 * counter;
+	    	this.leftMargin = leftMargin;
 	    	panel.setBorder(new EmptyBorder(0, leftMargin, 0, 0)); // First class of each package will have a variable left margin; formula : left margin = width(class) * package's number (starting from 0)
 	    	firstClassAdded = false;
 	    } else {
-	        panel.setBorder(new EmptyBorder(0, 200, 0, 0)); // Rest of classes will have a constant space between them
+	        panel.setBorder(new EmptyBorder(0, 200 * numberOfPackageDiagrams, 0, 0)); // Rest of classes will have a constant space between them
 	    }
 	    panel.add(c);
 	    this.add(panel);
@@ -88,7 +99,26 @@ public class PackageDiagram extends JPanel {
 	}
 
 	
+//	These getters will be used in drawing merge relations
+	public int getPackageDiagramWidth() {
+		return packageDiagramWidth;
+	}
+
+
+	public int getPackageDiagramHeight() {
+		return packageDiagramHeight;
+	}
+
+	public int getLeftMargin() {
+		return leftMargin;
+	}
+
+	public int getMaxNumberOfClassDiagrams() {
+		return maxNumberOfClassDiagrams;
+	}
 	
-	
-//	Maybe add a method to check if size of name's rectangle has enough space for the name
+	public int getNumberOfPackageDiagrams() {
+		return numberOfPackageDiagrams;
+	}
+		
 }

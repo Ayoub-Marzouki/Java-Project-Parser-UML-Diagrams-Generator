@@ -11,9 +11,9 @@ The following is a description of the relations we can find in a package diagram
 - Relations in a package diagram :
 	+ import : we use this relation if a class from package A imports a class from package B.
 	
-	+ access : we use this relation if a class from package A uses a class from package B (for example inheritance, or implementation).
+	+ access : we use this relation if a class from package A uses a class from package B (for example inheritance, or implementation). Given we're going to create both package and class diagrams, the latter will cover all kind of dependencies, thus we won't need this relation.
 	
-	+ merge : we can use this relation to inform that a package is made of multiple packages (integration of multiple functionalities for example). We can avoid using this relation by drawing the sub packages inside the main package; it provides almost the same meaning.
+	+ merge : we can use this relation to inform that a package is made of multiple packages (integration of multiple functionalities for example). We can avoid using this relation by drawing the sub packages inside the main package; it provides the same meaning.
 	
 	
 - Relations in a class diagram :
