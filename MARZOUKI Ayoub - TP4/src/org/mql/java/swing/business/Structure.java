@@ -1,4 +1,9 @@
 /**
+ * DEPRECATED (No longer in use)
+ */
+
+
+/**
  * This class is going to be the equivalent of :
  * 
  * ArrayList<ArrayList<HashMap<String, Vector<String>>>> structure = new ArrayList<>()

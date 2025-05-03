@@ -18,6 +18,17 @@ public class Composition {
     static Color randomColor = new Color(red, green, blue);
 
 	
+    /**
+     * Draws a straight composition line between two adjacent class diagrams.
+     * It includes a composition diamond symbol and a UML label "<<composition>>".
+     *
+     * @param g               The Graphics context to draw on.
+     * @param sourcePosition  The (x, y) coordinates of the source (child) class diagram.
+     * @param targetPosition  The (x, y) coordinates of the target (parent) class diagram.
+     * @param direction       An integer indicating the direction of the relationship:
+     *                        0 = draw composition diamond at the source (child),
+     *                        otherwise at the target (parent).
+     */
 	public static void drawAdjacent(Graphics g, int[] sourcePosition, int[] targetPosition, int direction) {
 		
 		Graphics2D g2d = (Graphics2D) g;
@@ -39,6 +50,19 @@ public class Composition {
 	    }
 	}
 	
+	
+	/**
+	 * Draws a multi-segment composition line between vertically stacked class diagrams.
+	 * The path follows vertical-horizontal-vertical segments and includes a composition diamond and label.
+	 *
+	 * @param g                  The Graphics context to draw on.
+	 * @param sourcePosition     The (x, y) coordinates of the source (child) class (top edge).
+	 * @param targetPosition     The (x, y) coordinates of the target (parent) class (bottom edge).
+	 * @param direction          An integer indicating the direction of the relationship:
+	 *                           0 = draw composition diamond pointing upward,
+	 *                           otherwise downward.
+	 * @param verticalLineLength The vertical distance from the child to the horizontal segment.
+	 */
 	public static void draw(Graphics g, int[] sourcePosition, int[] targetPosition, int direction, int verticalLineLength) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(2));

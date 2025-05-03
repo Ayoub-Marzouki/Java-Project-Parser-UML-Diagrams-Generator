@@ -1,7 +1,6 @@
 package org.mql.java.util;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -48,6 +47,22 @@ public class SwingUtilities {
         g2d.setTransform(transform);
     }
 	
+    /**
+     * Draws a directional triangular arrowhead at a given endpoint (x2, y2),
+     * pointing in one of four cardinal directions (UP, RIGHT, DOWN, LEFT).
+     *
+     * The arrow is drawn as a triangle using trigonometric calculations.
+     *
+     * @param g         The Graphics context to draw on.
+     * @param x1        Starting x-coordinate (not used in current implementation).
+     * @param y1        Starting y-coordinate (not used in current implementation).
+     * @param x2        x-coordinate of the arrow tip (where the arrowhead is drawn).
+     * @param y2        y-coordinate of the arrow tip (where the arrowhead is drawn).
+     * @param direction Direction of the arrow:
+     *                  1 = UP, 2 = RIGHT, 3 = DOWN, 4 = LEFT.
+     *
+     * @throws IllegalArgumentException if direction is not in [1, 4].
+     */
     public static void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int direction) {
         Graphics2D g2d = (Graphics2D) g;
 
@@ -73,7 +88,7 @@ public class SwingUtilities {
             break;
         default:
             throw new IllegalArgumentException("Invalid direction: " + direction);
-    }
+        }
 
         // Calculate the points for the arrowhead
         int xArrow1 = (int) (x2 - arrowSize * Math.cos(angle - Math.PI / 6));
@@ -86,6 +101,22 @@ public class SwingUtilities {
         g2d.drawPolygon(new int[] { x2, xArrow1, xArrow2 }, new int[] { y2, yArrow1, yArrow2 }, 3);
     }
     
+    /**
+     * Draws an open directional arrowhead (two lines forming a 'V') at the endpoint (x2, y2),
+     * pointing in one of four cardinal directions (UP, RIGHT, DOWN, LEFT).
+     *
+     * This method only draws the arrowhead and does not include the shaft/line from (x1, y1).
+     *
+     * @param g         The Graphics context to draw on.
+     * @param x1        Starting x-coordinate (not used in this method).
+     * @param y1        Starting y-coordinate (not used in this method).
+     * @param x2        x-coordinate of the arrow tip (where the head points).
+     * @param y2        y-coordinate of the arrow tip (where the head points).
+     * @param direction Direction of the arrow:
+     *                  1 = UP, 2 = RIGHT, 3 = DOWN, 4 = LEFT.
+     *
+     * @throws IllegalArgumentException if direction is not in [1, 4].
+     */
     public static void drawSimpleArrow(Graphics g, int x1, int y1, int x2, int y2, int direction) {
         Graphics2D g2d = (Graphics2D) g;
 
@@ -171,6 +202,18 @@ public class SwingUtilities {
     }
     
     
+    /**
+     * Draws an unfilled diamond (composition symbol) at the specified coordinates and direction.
+     * This is commonly used in UML diagrams to indicate a composition relationship.
+     *
+     * @param g2d       The Graphics2D context to draw on.
+     * @param x         The x-coordinate of the center of the diamond.
+     * @param y         The y-coordinate of the center of the diamond.
+     * @param direction The direction the diamond should face:
+     *                  1 = UP, 2 = RIGHT, 3 = DOWN, 4 = LEFT.
+     *
+     * @throws IllegalArgumentException if direction is not between 1 and 4.
+     */
     public static void drawCompositionSign(Graphics2D g2d, int x, int y, int direction) {
         int[] xPoints;
         int[] yPoints;
@@ -205,7 +248,15 @@ public class SwingUtilities {
         g2d.draw(diamond);
     }
     
-    
+    /**
+     * Creates a custom dashed stroke for drawing dashed lines.
+     *
+     * @param dashPattern  An array of floats specifying the dash pattern.
+     *                     For example: {5f, 5f} creates equal dashes and spaces.
+     * @param strokeWidth  The thickness of the stroke.
+     *
+     * @return A BasicStroke object configured with the given dash pattern and width.
+     */
     public static BasicStroke createDashedStroke(float[] dashPattern, float strokeWidth) {
         return new BasicStroke(strokeWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, dashPattern, 0f);
     }

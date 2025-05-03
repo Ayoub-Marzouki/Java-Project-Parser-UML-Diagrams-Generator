@@ -1,27 +1,24 @@
 package org.mql.java.swing.ui;
 
 import java.awt.BasicStroke;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.HashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.mql.java.swing.business.UMLDiagramsGenerator;
 import org.mql.java.util.SwingUtilities;
 
 public class PackageDiagram extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String packageName;
 	
     private int numberOfPackageDiagrams = UMLDiagramsGenerator.getPackagesNames().size();
@@ -62,6 +59,15 @@ public class PackageDiagram extends JPanel {
 		
 	}
 	
+	/**
+	 * Custom rendering logic for the package diagram.
+	 * <p>
+	 * This method is responsible for drawing the package's bounding boxes and displaying
+	 * the package name centered within the name rectangle. It casts the {@code Graphics}
+	 * object to {@code Graphics2D} for advanced drawing capabilities and uses a thicker stroke.
+	 *
+	 * @param g the {@code Graphics} object used for rendering
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		this.g2d = (Graphics2D) g;
@@ -74,9 +80,19 @@ public class PackageDiagram extends JPanel {
 		g2d.drawRect(packageRectCoordinates[0], packageRectCoordinates[1], packageRectCoordinates[2], packageRectCoordinates[3]);
 	}
 	
+	
 	private boolean firstClassAdded = true;
-	// This map will be used for generalization relations
-	private HashMap<ClassDiagram, PackageDiagram> classParents = new HashMap<>();
+	/**
+	 * Adds a class diagram component to the package diagram with appropriate spacing.
+	 * <p>
+	 * The first class component in each package diagram receives a variable left margin
+	 * based on its index to offset its position visually. Subsequent class components 
+	 * are given a constant horizontal margin. This ensures clear separation between classes
+	 * and packages within the overall layout. Each component is wrapped in a {@code JPanel}
+	 * to ensure its border is respected by the {@code FlowLayout}.
+	 *
+	 * @param c the {@code JComponent} (typically a {@code ClassDiagram}) to be added to this package diagram
+	 */
 	public void addToPackageDiagram(JComponent c) {
 		/*
 		 * This JPanel is mandatory, and without it the empty border added to these classes will never be taken into account : 

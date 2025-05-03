@@ -13,8 +13,17 @@ import org.mql.java.xml.model.Project;
 import org.mql.java.xml.model.Relationship;
 
 public class JavaProjectParser {
-
-    public static Project parseProject(String projectPath) {
+	
+	/**
+	 * Parses the specified project directory and constructs a Project object.
+	 * Recursively scans for all `.java` files and processes them to extract relevant information.
+	 *
+	 * @param projectPath The absolute or relative path to the root directory of the Java project.
+	 * @return A Project object representing the structure and contents of the parsed project.
+	 *
+	 * @throws IllegalArgumentException if the provided path is not a valid directory.
+	 */
+    public Project parseProject(String projectPath) {
         File projectDir = new File(projectPath);
         String projectName = projectDir.getName();
         Project project = new Project(projectName);
@@ -27,6 +36,14 @@ public class JavaProjectParser {
         return project;
     }
 
+    
+    /**
+     * Recursively traverses the given directory and its subdirectories,
+     * identifying `.java` files and passing them to the Java file parser.
+     *
+     * @param dir     The directory to traverse.
+     * @param project The Project object to which parsed Java files will be added.
+     */
     private static void traverseDirectory(File dir, Project project) {
         for (File file : dir.listFiles()) {
             if (file.isDirectory()) {
@@ -36,7 +53,16 @@ public class JavaProjectParser {
             }
         }
     }
-
+    
+    
+    /**
+     * Parses a single Java source file to identify and extract high-level declarations
+     * such as classes, interfaces, enums, and annotations. Detected elements are organized
+     * into their respective packages within the given Project object.
+     *
+     * @param javaFile The Java source file to parse.
+     * @param project  The Project model to which the parsed elements will be added.
+     */
     private static void parseJavaFile(File javaFile, Project project) {
         try (Scanner scanner = new Scanner(javaFile)) {
             String packageName = "default"; // Default package if none is specified
@@ -55,8 +81,7 @@ public class JavaProjectParser {
 
                 // Extract class
                 if (line.startsWith("public class ") || line.startsWith("class ")) {
-                    String className = line.replace("public", "").replace("class", "").split("\\{")[0].trim();
-                    currentClass = new Class(className);
+                	String className = line.replace("public", "").replace("class", "").split("extends|implements|\\{")[0].trim();                    currentClass = new Class(className);
                     extractRelationships(line, currentClass);
 
                     // Add the class to the appropriate package
@@ -102,6 +127,14 @@ public class JavaProjectParser {
         }
     }
 
+    
+    /**
+     * Analyzes a line of Java code to extract relationships such as inheritance (extends, implements)
+     * and field-based associations (aggregation). Updates the provided entity accordingly.
+     *
+     * @param line   The line of Java code to analyze.
+     * @param entity The class-like entity (Class, Interface, etc.) to attach relationships to.
+     */
     private static void extractRelationships(String line, Object entity) {
         // Handle inheritance (extends/implements)
         if (line.contains("extends ")) {

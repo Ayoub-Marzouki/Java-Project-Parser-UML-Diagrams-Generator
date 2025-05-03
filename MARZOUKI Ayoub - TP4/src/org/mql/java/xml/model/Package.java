@@ -47,6 +47,15 @@ public class Package {
 		return name;
 	}
 	
+	
+	/**
+	 * Converts this Package object to its XML representation.
+	 * The XML element will be named `<package>` and will include the name attribute.
+	 * Additionally, it writes the XML representation of all classes, interfaces, enums, and annotations contained in the package.
+	 *
+	 * @param xmlWriter The XMLStreamWriter used to write the XML.
+	 * @throws XMLStreamException If there is an error writing to the XML stream.
+	 */
 	public void toXml(XMLStreamWriter xmlWriter) throws XMLStreamException {
         xmlWriter.writeStartElement("package");
         xmlWriter.writeAttribute("name", name);

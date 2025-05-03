@@ -1,19 +1,13 @@
 package org.mql.java.swing.business;
 
-import java.awt.Container;
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import org.mql.java.swing.ui.ClassDiagram;
 import org.mql.java.swing.ui.Frame;
 import org.mql.java.swing.ui.PackageDiagram;
 import org.mql.java.swing.ui.RelationsLayer;
-import org.mql.java.swing.ui.relations.pack.Merge;
 
 public final class UMLDiagramsGenerator {
 	private static List<String> fullyQualifiedClassNames = new ArrayList<>();
@@ -65,6 +59,22 @@ public final class UMLDiagramsGenerator {
 		return maxNumberOfClasses;
 	}
 	
+	/**
+	 * Generates UML diagrams for all packages and classes in the project and adds them to the given {@link Frame}.
+	 * <p>
+	 * This method performs the following steps:
+	 * <ul>
+	 *   <li>Creates a {@link PackageDiagram} for each package in the project.</li>
+	 *   <li>Processes each class to extract its UML metadata (fields and methods) using {@link UMLClassMetadataExtractor}.</li>
+	 *   <li>Associates each class diagram with its corresponding relationship type (generalization, aggregation, composition, realization, dependency).</li>
+	 *   <li>Adds each relevant {@link ClassDiagram} to its corresponding {@link PackageDiagram} based on package membership.</li>
+	 *   <li>Tracks and counts only the packages that contain at least one class.</li>
+	 *   <li>After all package diagrams are added, it creates a {@link RelationsLayer} and attaches it to the frame.</li>
+	 * </ul>
+	 *
+	 * @param frame the {@link Frame} instance to which all package and relation diagrams will be added
+	 * @throws ClassNotFoundException if any class in {@code fullyQualifiedClassNames} cannot be found
+	 */
 	public static void generateDiagrams(Frame frame) throws ClassNotFoundException {
 //		Frame frame = new Frame();
 		

@@ -1,20 +1,9 @@
 package org.mql.java.application;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 import org.mql.java.swing.business.ProjectProcessor;
 import org.mql.java.swing.business.UMLDiagramsGenerator;
-import org.mql.java.swing.ui.ClassDiagram;
 import org.mql.java.swing.ui.Frame;
-import org.mql.java.swing.ui.PackageDiagram;
-import org.mql.java.swing.ui.RelationsLayer;
-import org.mql.java.swing.ui.relations.pack.Merge;
 
 public class SwingMain {
 	public static void main(String[] args) throws ClassNotFoundException {

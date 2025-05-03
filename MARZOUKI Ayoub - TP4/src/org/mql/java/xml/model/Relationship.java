@@ -25,6 +25,14 @@ public class Relationship {
         return type + " -> " + target;
     }
     
+    
+    /**
+     * Converts this Relationship object to its XML representation.
+     * The XML element will be named <`relationship`> and will include the `type` and `target` attributes.
+     *
+     * @param xmlWriter The XMLStreamWriter used to write the XML.
+     * @throws XMLStreamException If there is an error writing to the XML stream.
+     */
     public void toXml(XMLStreamWriter xmlWriter) throws XMLStreamException {
         xmlWriter.writeStartElement("relationship");
         xmlWriter.writeAttribute("type", type.name());

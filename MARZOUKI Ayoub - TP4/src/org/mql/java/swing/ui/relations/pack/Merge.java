@@ -1,17 +1,12 @@
 package org.mql.java.swing.ui.relations.pack;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import org.mql.java.swing.ui.Frame;
 import org.mql.java.swing.ui.PackageDiagram;
 import org.mql.java.util.SwingUtilities;
-import org.mql.java.util.SwingUtilities.Direction;
 
 public class Merge {
     // Horizontal extension length for the arrow
@@ -24,6 +19,16 @@ public class Merge {
     // For the dashed stroke we'll be using to create dashed lines
     private static float[] dashPattern = {8, 8};  // 10 pixels for the dash, 8 pixels for the gap
     
+    
+    /**
+     * Draws a <<merge>> relationship between two packages in a package diagram.
+     * It uses a dashed routed line (right → down → left) and a hollow triangle arrowhead pointing from source to target.
+     *
+     * @param g            The Graphics context to draw on.
+     * @param sourcePackage The source PackageDiagram containing both packages.
+     * @param sourceIndex  The vertical index of the source package.
+     * @param targetIndex  The vertical index of the target package.
+     */
     public static void draw(Graphics g, PackageDiagram sourcePackage, int sourceIndex, int targetIndex) {
     	Graphics2D g2d = (Graphics2D) g;
     	// Package height + 10 (I think 10 is coming from nameRect[1] + packrect[1]) + 3 (size of stroke used there)

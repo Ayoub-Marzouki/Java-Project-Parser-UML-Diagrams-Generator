@@ -19,6 +19,15 @@ public class Realization {
     private static float[] dashPattern = {8, 8};
 
 	
+    /**
+     * Draws a realization (interface implementation) relationship between adjacent elements.
+     * Rendered with a dashed line and a hollow triangle arrowhead labeled "<<realization>>".
+     *
+     * @param g               The Graphics context to draw on.
+     * @param sourcePosition  (x, y) of the implementing class (child).
+     * @param targetPosition  (x, y) of the interface (parent).
+     * @param direction       0 = arrow at source, otherwise at target.
+     */
 	public static void drawAdjacent(Graphics g, int[] sourcePosition, int[] targetPosition, int direction) {
 		
 		Graphics2D g2d = (Graphics2D) g;
@@ -43,6 +52,16 @@ public class Realization {
 	    }
 	}
 	
+	/**
+	 * Draws a routed realization (interface implementation) relationship.
+	 * Uses a multi-segment dashed line and a hollow triangle arrowhead labeled "<<realization>>".
+	 *
+	 * @param g                  The Graphics context to draw on.
+	 * @param sourcePosition     (x, y) of the implementing class (child).
+	 * @param targetPosition     (x, y) of the interface (parent).
+	 * @param direction          0 = arrow at child side, otherwise at parent side.
+	 * @param verticalLineLength The vertical offset between source and target routing segments.
+	 */
 	public static void draw(Graphics g, int[] sourcePosition, int[] targetPosition, int direction, int verticalLineLength) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(2));

@@ -1,19 +1,20 @@
 package org.mql.java.swing.ui;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import org.mql.java.util.SwingUtilities;
 
 public class ClassDiagram extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String className;
 	
 	private String fieldsUML;
@@ -34,9 +35,23 @@ public class ClassDiagram extends JPanel {
 		this.setPreferredSize(new Dimension(classDiagramWidth, classDiagramHeight));
 	}
 	
+	/**
+	 * Paints the UML class diagram component.
+	 * <p>
+	 * This method draws three main rectangular sections:
+	 * <ul>
+	 *   <li>The class name section at the top.</li>
+	 *   <li>The fields section in the middle.</li>
+	 *   <li>The methods section at the bottom.</li>
+	 * </ul>
+	 * Text is centered within each section using {@link SwingUtilities#drawCenteredText(Graphics2D, String, int, int, int, int)}.
+	 * The method also sets a thicker stroke (3 pixels) for visual clarity of the rectangles.
+	 *
+	 * @param g the {@link Graphics} context in which to paint
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		this.g2d = (Graphics2D) g;
+		ClassDiagram.g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(3));
 		
 		g2d.drawRect(nameRectCoordinates[0], nameRectCoordinates[1], nameRectCoordinates[2], nameRectCoordinates[3]);

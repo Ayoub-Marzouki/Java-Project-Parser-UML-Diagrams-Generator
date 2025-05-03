@@ -18,7 +18,17 @@ public class Dependency {
     static Color randomColor = new Color(red, green, blue);
     private static float[] dashPattern = {8, 8};
 
-	
+    /**
+     * Draws a dashed dependency line with an open arrow between two adjacent class diagrams.
+     * Includes the UML label "dependency".
+     *
+     * @param g               The Graphics context to draw on.
+     * @param sourcePosition  The (x, y) coordinates of the source (client) class.
+     * @param targetPosition  The (x, y) coordinates of the target (supplier) class.
+     * @param direction       Indicates where the arrow should be drawn:
+     *                        0 = draw at source,
+     *                        otherwise at target.
+     */
 	public static void drawAdjacent(Graphics g, int[] sourcePosition, int[] targetPosition, int direction) {
 		
 		Graphics2D g2d = (Graphics2D) g;
@@ -43,6 +53,16 @@ public class Dependency {
 	    }
 	}
 	
+	/**
+	 * Draws a routed dashed dependency connection between vertically stacked class diagrams.
+	 * Displays the UML label "<<dependency>>" and an open arrow.
+	 *
+	 * @param g                  The Graphics context to draw on.
+	 * @param sourcePosition     (x, y) of the client class (typically top).
+	 * @param targetPosition     (x, y) of the supplier class (typically bottom).
+	 * @param direction          0 = arrow points upward, otherwise downward.
+	 * @param verticalLineLength Length of the vertical segments before/after the horizontal connector.
+	 */
 	public static void draw(Graphics g, int[] sourcePosition, int[] targetPosition, int direction, int verticalLineLength) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(2));

@@ -5,14 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -21,6 +18,10 @@ import javax.swing.SwingConstants;
 // Check Frame-details.txt for a detailed description
 
 public class Frame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ZoomableLayer contentPanel;
 	private static JPanel diagramsLayer;
 	
@@ -29,7 +30,7 @@ public class Frame extends JFrame {
 	private int PanelsHeight = 10;
 	
 	private JLabel label;
-	private static JButton generate;
+	private JButton generate;
 	private JTextField userInput;
 	
 	private static JDialog popup;
@@ -168,6 +169,16 @@ public class Frame extends JFrame {
 		this.revalidate();
 	}
 	
+	
+	/**
+	 * Adds the {@link RelationsLayer} on top of the diagrams layer within the content panel.
+	 * <p>
+	 * This method sets the layout, bounds, and transparency of the {@code RelationsLayer}, then
+	 * adds it to the {@code contentPanel} at the specified Z-order to ensure it is layered correctly.
+	 * Setting the layer to be non-opaque is crucial to allow visibility of the diagrams layer beneath it.
+	 *
+	 * @param rl the {@code RelationsLayer} instance to be added to the content panel
+	 */
 	public void addRelationsLayer(RelationsLayer rl) {
 		rl.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
 		rl.setBounds(0, 0, diagramsLayer.getWidth(), diagramsLayer.getHeight());
@@ -181,7 +192,7 @@ public class Frame extends JFrame {
 	}
 		
 //	button getter will be needed to later implement the action it'll perform
-	public static JButton getButton() {
+	public  JButton getButton() {
 		return generate;
 	}
 

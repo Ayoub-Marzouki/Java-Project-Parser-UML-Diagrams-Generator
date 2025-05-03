@@ -24,6 +24,14 @@ public class Enum {
         return "Enum: " + name + "\nRelationships: " + relationships;
     }
     
+    
+    /**
+     * Converts this Enum object to its XML representation.
+     * The XML element will be named `<enum>` and will include the name attribute and any relationships.
+     *
+     * @param xmlWriter The XMLStreamWriter used to write the XML.
+     * @throws XMLStreamException If there is an error writing to the XML stream.
+     */
     public void toXml(XMLStreamWriter xmlWriter) throws XMLStreamException {
         xmlWriter.writeStartElement("enum");
         xmlWriter.writeAttribute("name", name);
@@ -32,7 +40,15 @@ public class Enum {
 
         xmlWriter.writeEndElement();
     }
-
+    
+    
+    /**
+     * Writes the relationships of this Enum to XML under the <relationships> element.
+     * Each relationship will be written as an individual XML element using the Relationship object's toXml method.
+     *
+     * @param xmlWriter The XMLStreamWriter used to write the XML.
+     * @throws XMLStreamException If there is an error writing to the XML stream.
+     */
     private void writeRelationships(XMLStreamWriter xmlWriter) throws XMLStreamException {
         if (!relationships.isEmpty()) {
             xmlWriter.writeStartElement("relationships");
@@ -42,6 +58,5 @@ public class Enum {
             xmlWriter.writeEndElement();
         }
     }
-    
     
 }

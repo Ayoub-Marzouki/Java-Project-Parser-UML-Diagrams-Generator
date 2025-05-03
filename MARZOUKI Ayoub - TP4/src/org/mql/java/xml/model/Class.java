@@ -24,6 +24,14 @@ public class Class {
         return "Class: " + name + "\nRelationships: " + relationships;
     }
     
+    
+    /**
+     * Converts this Class object to its XML representation.
+     * The XML element will be named `class` and will include the name attribute and any relationships.
+     *
+     * @param xmlWriter The XMLStreamWriter used to write the XML.
+     * @throws XMLStreamException If there is an error writing to the XML stream.
+     */
     public void toXml(XMLStreamWriter xmlWriter) throws XMLStreamException {
         xmlWriter.writeStartElement("class");
         xmlWriter.writeAttribute("name", name);
@@ -32,7 +40,15 @@ public class Class {
 
         xmlWriter.writeEndElement();
     }
-
+    
+    
+    /**
+     * Writes the relationships of this Class to XML under the <relationships> element.
+     * Each relationship will be written as an individual XML element using the Relationship object's toXml method.
+     *
+     * @param xmlWriter The XMLStreamWriter used to write the XML.
+     * @throws XMLStreamException If there is an error writing to the XML stream.
+     */
     private void writeRelationships(XMLStreamWriter xmlWriter) throws XMLStreamException {
         if (!relationships.isEmpty()) {
             xmlWriter.writeStartElement("relationships");

@@ -18,6 +18,17 @@ public class Aggregation {
     static Color randomColor = new Color(red, green, blue);
 
 	
+    /**
+     * Draws a straight aggregation line between two adjacent class diagrams.
+     * It includes an aggregation symbol and a UML label "<<aggregation>>".
+     *
+     * @param g               The Graphics context to draw on.
+     * @param sourcePosition  The (x, y) position of the source (child) class diagram.
+     * @param targetPosition  The (x, y) position of the target (parent) class diagram.
+     * @param direction       An integer indicating the direction:
+     *                        0 = draw aggregation symbol at the source (child),
+     *                        otherwise at the target (parent).
+     */
 	public static void drawAdjacent(Graphics g, int[] sourcePosition, int[] targetPosition, int direction) {
 		
 		Graphics2D g2d = (Graphics2D) g;
@@ -39,6 +50,18 @@ public class Aggregation {
 	    }
 	}
 	
+	/**
+	 * Draws a multi-segment aggregation line between two class diagrams stacked vertically,
+	 * with a vertical-horizontal-vertical path. Includes label and aggregation symbol.
+	 *
+	 * @param g                  The Graphics context to draw on.
+	 * @param sourcePosition     The (x, y) position of the source (child) class (top edge).
+	 * @param targetPosition     The (x, y) position of the target (parent) class (bottom edge).
+	 * @param direction          An integer indicating the direction:
+	 *                           0 = draw aggregation symbol pointing upward,
+	 *                           otherwise downward.
+	 * @param verticalLineLength The vertical distance from the child to the horizontal segment.
+	 */
 	public static void draw(Graphics g, int[] sourcePosition, int[] targetPosition, int direction, int verticalLineLength) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(2));

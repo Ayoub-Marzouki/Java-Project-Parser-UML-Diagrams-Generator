@@ -8,11 +8,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.mql.java.swing.ui.ClassDiagram;
 import org.mql.java.swing.ui.Frame;
-import org.mql.java.swing.ui.PackageDiagram;
 
 public class ProjectProcessor {
     private static List<String> fullyQualifiedClassNames = new ArrayList<>();
@@ -21,9 +18,7 @@ public class ProjectProcessor {
     
 //  Will be later used to drawMergeRelations in RelationsLayer class
     public static HashMap<String, String> mergeRelations = new HashMap<>();
-    
-    private static HashMap<String, String> importRelations = new HashMap<>();
-    
+        
     public static HashMap<String, String> generalizationRelations = new HashMap<>();
     
     public static HashMap<String, String> aggregationRelations = new HashMap<>();
@@ -34,6 +29,23 @@ public class ProjectProcessor {
     
     public static HashMap<String, String> dependencyRelations = new HashMap<>();
 
+    
+    /**
+     * <h1>Processes the Java source project located at the specified path.</h1>
+     * <p>
+     * This method performs the following steps:
+     * <ol>
+     *     <li>Validates the provided source folder path.</li>
+     *     <li>Ensures the folder path contains a 'src' directory.</li>
+     *     <li>Recursively retrieves all Java files and generates their fully qualified class names.</li>
+     *     <li>Stores package names and package hierarchy information.</li>
+     *     <li>Prepares the data structures required for drawing visual representations (e.g., class diagrams).</li>
+     *     <li>Extracts and categorizes class relationships (e.g., generalization, aggregation, realization).</li>
+     * </ol>
+     * If the provided path is invalid or does not contain a 'src' folder, an error popup is shown to the user.
+     *
+     * @param srcFolderPath the absolute or relative path to the project's source folder
+     */
     public static void process(String srcFolderPath) {
     	Path pathToSrcFolder = Path.of(srcFolderPath);
         File srcFolder = pathToSrcFolder.toFile();
@@ -61,10 +73,27 @@ public class ProjectProcessor {
         processRelations();
     }
 
+    
+    /**
+     * Checks whether the provided file path is a valid directory.
+     *
+     * @param srcFolder the file object representing the source folder
+     * @return true if the folder exists and is a directory, false otherwise
+     */
     private static boolean isValidSrcFolder(File srcFolder) {
         return srcFolder.exists() && srcFolder.isDirectory();
     }
 
+    
+    /**
+     * Finds and returns the base path ending with 'src' from the given full path.
+     * <p>
+     * This method looks for the first occurrence of "/src" in the path and returns
+     * the substring from the beginning up to and including the 'src' directory.
+     *
+     * @param fullPath the absolute path to search within
+     * @return the base path ending in 'src' if found; otherwise, null
+     */
     private static String findSrcBasePath(String fullPath) {
         int srcIndex = fullPath.indexOf(File.separator + "src");
         if (srcIndex == -1) {
@@ -73,6 +102,17 @@ public class ProjectProcessor {
         return fullPath.substring(0, srcIndex + 4); // Include 'src' in the base path
     }
 
+    /**
+     * Recursively traverses the given source files to extract fully qualified class names,
+     * package names, and the package hierarchy.
+     * <p>
+     * For Java files, it removes the '.java' extension and generates the fully qualified class name
+     * using the relative path. For directories, it adds their names and relative paths to the
+     * packages lists, and continues traversal.
+     *
+     * @param srcFolderFiles array of files and directories in the source folder
+     * @param srcBasePath the base path to which relative paths will be computed
+     */
     private static void retrieveAllFilesAndGenerateNames(File[] srcFolderFiles, String srcBasePath) {
         for (File f : srcFolderFiles) {
             String relativePath = f.getAbsolutePath().replace(srcBasePath, "").replace(File.separator, ".");
@@ -93,12 +133,22 @@ public class ProjectProcessor {
         }
     }
     
+    
+    /**
+     * Transfers the collected class and package data to the UMLDiagramsGenerator class
+     * to prepare for diagram generation.
+     */
     private static void prepareToDraw() {
     	UMLDiagramsGenerator.setFullyQualifiedClassNames(ProjectProcessor.getFullyQualifiedClassNames());
         UMLDiagramsGenerator.setPackageHierarchy(ProjectProcessor.getPackageHierarchy());
         UMLDiagramsGenerator.setPackagesNames(ProjectProcessor.getPackagesNames());
     }
 
+    
+    /**
+     * Prints the results of the processed project structure to the console,
+     * including fully qualified class names, package hierarchy, and individual package names.
+     */
     public static void printResults() {
         System.out.println("\nFully Qualified Class Names:");
         for (String className : fullyQualifiedClassNames) {
@@ -116,10 +166,21 @@ public class ProjectProcessor {
         }
     }
     
-    
+    /**
+     * Orchestrates the processing of all types of relationships between packages and classes.
+     * <p>
+     * This method triggers the detection and registration of:
+     * <ul>
+     *   <li>Merge relations (package nesting)</li>
+     *   <li>Generalization (inheritance)</li>
+     *   <li>Aggregation (has-a relationships)</li>
+     *   <li>Composition (strong ownership relationships)</li>
+     *   <li>Realization (interface implementation)</li>
+     *   <li>Dependency (uses-a relationships)</li>
+     * </ul>
+     */
     public static void processRelations() {
     	processMergeRelations();
-    	
     	processGeneralizationRelations();
     	processAggregationRelations();
     	processCompositionRelations();
@@ -128,6 +189,15 @@ public class ProjectProcessor {
     }
     
     
+    /**
+     * Determines the immediate parent package of each sub-package within the package hierarchy.
+     * <p>
+     * This creates a mapping where each child package points to its closest ancestor
+     * (i.e., the longest matching prefix in the package name).
+     * <p>
+     * Example: For `org.mql.java.drawing`, the immediate parent would be `org.mql.java`
+     * if `org`, `org.mql`, and `org.mql.java` are all present in the hierarchy.
+     */
     public static void processMergeRelations() {
     	for (String child : packageHierarchy) {
     	    String immediateParent = null; // will hold the closest ancestor of the current child (org and org.mql are both ancestors of org.mql.java, but org.mql is closer)
@@ -145,6 +215,14 @@ public class ProjectProcessor {
     	}
     }
     
+    /**
+     * Detects generalization (inheritance) relationships between classes.
+     * <p>
+     * For each class in the project, this method checks whether it extends
+     * another class that is also part of the analyzed classes. If so,
+     * the relation is registered in the {@code generalizationRelations} map,
+     * where the key is the subclass and the value is the superclass.
+     */
     public static void processGeneralizationRelations() {
         for (String className : fullyQualifiedClassNames) {
             try {
@@ -162,6 +240,15 @@ public class ProjectProcessor {
         }
     }
     
+    
+    /**
+     * Identifies aggregation relationships based on fields in a class.
+     * <p>
+     * If a class contains a non-primitive field whose type is another known class,
+     * it is considered an aggregation. These relationships are stored in
+     * {@code aggregationRelations}, with the containing class as the key
+     * and the field's class as the value.
+     */
     public static void processAggregationRelations() {
         for (String className : fullyQualifiedClassNames) {
             try {
@@ -190,6 +277,17 @@ public class ProjectProcessor {
         }
     }
     
+    
+    /**
+     * Identifies composition relationships by inspecting field declarations and
+     * their initialization context.
+     * <p>
+     * If a class contains a non-primitive field whose type is another known class,
+     * and this field is instantiated within the same class (typically in constructors
+     * or field initializers), it is marked as a composition relationship.
+     * These relations are stored in {@code compositionRelations}, mapping
+     * the owner class to the composed class.
+     */
     public static void processCompositionRelations() {
         for (String className : fullyQualifiedClassNames) {
             try {
@@ -263,6 +361,14 @@ public class ProjectProcessor {
     }
     
     
+    /**
+     * Identifies realization relationships between classes and interfaces.
+     * <p>
+     * For each class in the project, this method checks if it implements any interface
+     * that is also part of the analyzed set. If such an interface is found,
+     * the relationship is stored in {@code realizationRelations}, mapping the implementing
+     * class to the interface it realizes.
+     */
     public static void processRealizationRelations() {
         for (String className : fullyQualifiedClassNames) {
             try {
@@ -288,6 +394,13 @@ public class ProjectProcessor {
     }
     
     
+    /**
+     * Detects dependency relationships between classes based on method signatures.
+     * <p>
+     * This method processes all methods in each class and checks their parameter types
+     * and return types to determine if they use other known classes. Such uses
+     * are considered dependencies and stored in {@code dependencyRelations}.
+     */
     public static void processDependencyRelations() {
         // Iterate through the list of fully qualified class names
         for (String className : fullyQualifiedClassNames) {
@@ -307,7 +420,14 @@ public class ProjectProcessor {
         }
     }
 
-    // Helper method to process methods in a class
+    /**
+     * Processes all declared methods of a given class to detect dependencies.
+     * <p>
+     * This involves analyzing each method’s parameters and return type
+     * to find references to other classes within the analyzed set.
+     *
+     * @param clazz the class whose methods will be inspected
+     */
     private static void processMethods(Class<?> clazz) {
         // Get all methods in the class
         Method[] methods = clazz.getDeclaredMethods();
@@ -322,7 +442,15 @@ public class ProjectProcessor {
         }
     }
 
-    // Helper method to process method parameters and detect dependencies
+    /**
+     * Inspects a method's parameter types to identify dependencies.
+     * <p>
+     * If any parameter type belongs to the analyzed set of classes, a dependency
+     * is registered from the method's declaring class to the parameter class.
+     *
+     * @param method    the method being analyzed
+     * @param className the name of the class containing the method
+     */
     private static void processMethodParameters(Method method, String className) {
         // Get method parameters
         Class<?>[] parameterTypes = method.getParameterTypes();
@@ -339,7 +467,16 @@ public class ProjectProcessor {
         }
     }
 
-    // Helper method to process return type and detect dependencies
+
+    /**
+     * Inspects a method's return type to identify dependencies.
+     * <p>
+     * If the return type belongs to the analyzed set of classes, a dependency
+     * is registered from the method's declaring class to the return type class.
+     *
+     * @param method    the method being analyzed
+     * @param className the name of the class containing the method
+     */
     private static void processReturnType(Method method, String className) {
         // Get method return type
         Class<?> returnType = method.getReturnType();
@@ -352,7 +489,12 @@ public class ProjectProcessor {
         }
     }
 
-    // Method to print dependency relations
+    /**
+     * Prints all detected class-to-class dependency relationships.
+     * <p>
+     * For each dependency recorded in {@code dependencyRelations}, this method prints
+     * a message indicating which class depends on which.
+     */
     public static void printDependencyRelations() {
         for (String key : dependencyRelations.keySet()) {
             System.out.println("Class: " + key + " depends on Class: " + dependencyRelations.get(key));

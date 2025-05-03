@@ -1,31 +1,11 @@
 package org.mql.java.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Point;
-import java.util.ArrayList;
+
 import java.util.HashMap;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import org.mql.java.swing.business.ProjectProcessor;
-import org.mql.java.swing.business.UMLDiagramsGenerator;
 import org.mql.java.swing.ui.ClassDiagram;
 import org.mql.java.swing.ui.Frame;
 import org.mql.java.swing.ui.PackageDiagram;
-import org.mql.java.swing.ui.relations.cls.Aggregation;
-import org.mql.java.swing.ui.relations.pack.Merge;
 
 public class Testing {
 	public static void main(String[] args) {

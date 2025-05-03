@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import org.mql.java.swing.ui.PackageDiagram;
 import org.mql.java.util.SwingUtilities;
 
 
@@ -18,7 +17,15 @@ public class Generalization {
     static int blue = random.nextInt(256);
     static Color randomColor = new Color(red, green, blue);
 
-	
+    /**
+     * Draws a generalization (inheritance) line between two adjacent classes with a hollow triangle arrow.
+     * Labeled with "<<generalization>>".
+     *
+     * @param g               The Graphics context to draw on.
+     * @param sourcePosition  The (x, y) coordinates of the subclass (child).
+     * @param targetPosition  The (x, y) coordinates of the superclass (parent).
+     * @param direction       0 = arrow at source side, otherwise at target side.
+     */
 	public static void drawAdjacent(Graphics g, int[] sourcePosition, int[] targetPosition, int direction) {
 		
 		Graphics2D g2d = (Graphics2D) g;
@@ -40,6 +47,17 @@ public class Generalization {
 	    }
 	}
 	
+	
+	/**
+	 * Draws a routed generalization (inheritance) connection with a hollow triangle arrow.
+	 * Displays "<<generalization>>" label near the superclass.
+	 *
+	 * @param g                  The Graphics context to draw on.
+	 * @param sourcePosition     (x, y) of the child class.
+	 * @param targetPosition     (x, y) of the parent class.
+	 * @param direction          0 = arrow points upward, otherwise downward.
+	 * @param verticalLineLength Vertical offset for intermediate routing lines.
+	 */
 	public static void draw(Graphics g, int[] sourcePosition, int[] targetPosition, int direction, int verticalLineLength) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(2));
