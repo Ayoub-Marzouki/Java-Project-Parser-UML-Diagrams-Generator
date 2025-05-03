@@ -28,13 +28,14 @@ public class SwingMain {
             try {
 				UMLDiagramsGenerator.generateDiagrams(frame);
 			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
     });
         
         
-        
+//        -------------------------------------------------------------------------------------
+//        You can always test specific methods like this : 
+//        
 //        Class<?> cls = UMLClassMetadataExtractor.class;
 //        UMLClassMetadataExtractor c = new UMLClassMetadataExtractor(cls);
 //        c.printFieldsUML();

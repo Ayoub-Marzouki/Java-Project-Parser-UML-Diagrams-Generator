@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mql.java.swing.ui.ClassDiagram;
+import org.mql.java.swing.ui.Frame;
 import org.mql.java.swing.ui.PackageDiagram;
 
 public class ProjectProcessor {
@@ -38,13 +39,15 @@ public class ProjectProcessor {
         File srcFolder = pathToSrcFolder.toFile();
         
         if (!isValidSrcFolder(srcFolder)) {
-            System.out.println("Invalid src folder path provided.");
+        	Frame.setStatus("Invalid src folder path provided.");
+    	    Frame.getPopup().setVisible(true);
             return;
         }
 
         String srcBasePath = findSrcBasePath(srcFolder.getAbsolutePath());
         if (srcBasePath == null) {
-            System.out.println("The provided path does not contain a 'src' folder.");
+        	Frame.setStatus("The provided path does not contain a 'src' folder.");
+    	    Frame.getPopup().setVisible(true);
             return;
         }
 

@@ -9,17 +9,19 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 // Check Frame-details.txt for a detailed description
 
 public class Frame extends JFrame {
-	private JLayeredPane contentPanel;
+	private ZoomableLayer contentPanel;
 	private static JPanel diagramsLayer;
 	
 	private JScrollPane scrollPane;
@@ -29,6 +31,9 @@ public class Frame extends JFrame {
 	private JLabel label;
 	private static JButton generate;
 	private JTextField userInput;
+	
+	private static JDialog popup;
+    private static JLabel statusLabel;
 	
 	public Frame() {
 		this.setSize(1000, 600);
@@ -54,8 +59,20 @@ public class Frame extends JFrame {
 	 */
 	private void prepareFrame() {
 		diagramsLayer = new JPanel();
-		contentPanel = new JLayeredPane();
+		contentPanel = new ZoomableLayer();
 		
+//		A placeholder for any potential problems (e.g. user enters an invalid src folder path)
+		popup = new JDialog(this, "Error", true); 
+		popup.setSize(500, 120);
+		popup.setLocationRelativeTo(this);
+		
+		statusLabel = new JLabel(" ");
+		statusLabel.setOpaque(true);
+		statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    statusLabel.setForeground(Color.red);
+	    
+	    popup.add(statusLabel);
+	    		
 //		If we set some other layout to the layered pane, it'll override the way layeredpanes work, so it has to be set to null
 		contentPanel.setLayout(null);
 //		Set some space between the diagramLayer panel and its container the contentPanel
@@ -77,6 +94,18 @@ public class Frame extends JFrame {
 	private void promptUser() {
 		JPanel p = new JPanel();
 		
+        JButton zoomIn = new JButton("+");
+        JButton zoomOut = new JButton("–");
+
+        zoomIn.addActionListener(e -> {
+            double z = contentPanel.getZoom();
+            contentPanel.setZoom(Math.min(z + 0.1, 3.0));
+        });
+        zoomOut.addActionListener(e -> {
+            double z = contentPanel.getZoom();
+            contentPanel.setZoom(Math.max(z - 0.05, 0.001));
+        });
+		
 		label = new JLabel("Path to your Source Folder : ");
 		label.setBackground(Color.blue);
 		
@@ -86,10 +115,12 @@ public class Frame extends JFrame {
 		p.add(label);
 		p.add(userInput);
 		p.add(generate);
+		
+		p.add(zoomOut);
+		p.add(zoomIn);
 		this.add(p, BorderLayout.NORTH);
 		
 	}
-	
 
 	/**
 	 * Makes the contentPanel (which will hold the diagrams) scrollable. </br>
@@ -102,6 +133,14 @@ public class Frame extends JFrame {
 		
 		this.add(scrollPane, BorderLayout.CENTER);
 	}
+	
+	/**
+	 * Updates the status bar at the bottom of the frame.
+	 */
+	public static void setStatus(String message) {
+	    statusLabel.setText(message);
+	}
+
 	
 
 	 /**
@@ -154,6 +193,12 @@ public class Frame extends JFrame {
 	//  This will be used in RelationsLayer to get the index of retrieved packages
 	public static JPanel getDiagramsLayer() {
 		return diagramsLayer;
+	}
+	
+	
+//	This will be used in ProjectProcessor to show the error
+	public static JDialog getPopup() {
+		return popup;
 	}
 
 	
