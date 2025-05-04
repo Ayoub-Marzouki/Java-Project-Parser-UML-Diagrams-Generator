@@ -10,7 +10,7 @@ import org.mql.java.xml.model.Relationship;
 public class XMLMain {
     public static void main(String[] args) {
         JavaProjectParser parser = new JavaProjectParser();
-        Project project = parser.parseProject("C:\\Users\\ayoub\\git\\repository\\MARZOUKI Ayoub - TP4");
+        Project project = parser.parseProject("C:\\Users\\ayoub\\git\\repository\\Java-Project-Parser-UML-Diagrams-Generator");
         project.toXml("output.xml");
 
         String xmlFilePath = "output.xml";
